@@ -11,35 +11,44 @@ from signalizador import (
     obter_volatilidade_real
 )
 
-# Configuração do app
+# Configurações do app
 st.set_page_config(page_title="Sinalizador BTC", layout="centered")
 st.title("🚦 Sinalizador de Risco - Bitcoin")
 st.caption(f"Atualizado em: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
-# Exibir imagem do semáforo
-image = Image.open("images/btc_semaforo.jpeg")
-st.image(image, caption="Sinalizador BTC", use_container_width=True)
-
-# Campo para inserir a API Key
+# Campo para inserir API key
 api_key = st.text_input("🔑 Insira sua API Key do CryptoPanic:", type="password")
 
-# Quando a API key for preenchida:
+# Só executa se a API key for preenchida
 if api_key:
     with st.spinner("🔍 Coletando e analisando..."):
-        # Coleta e processamento
+        # Coleta e análise
         noticias = buscar_noticias(api_key)
         sentimentos = analisar_sentimentos(noticias)
         volatilidade_real = obter_volatilidade_real()
         volume = len(sentimentos)
         mensagem, emoji = classificar_risco(sentimentos, volatilidade_real, volume)
 
-    # Exibir resultado
+    # Mostrar resultado textual
     st.markdown(f"## {emoji} {mensagem}")
     st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
     st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
     st.metric("Volume de Notícias", volume)
 
-    # Mostrar últimas notícias analisadas
+    # Mostrar imagem do semáforo correspondente ao risco
+    if emoji == "🔴":
+        imagem_risco = "images/semaforo_vermelho.jpeg"
+    elif emoji == "🟡":
+        imagem_risco = "images/semaforo_amarelo.jpeg"
+    elif emoji == "🟢":
+        imagem_risco = "images/semaforo_verde.jpeg"
+    else:
+        imagem_risco = "images/semaforo_verde.jpeg"  # fallback
+
+    image = Image.open(imagem_risco)
+    st.image(image, caption=f"Status de Risco: {mensagem}", use_container_width=True)
+
+    # Mostrar as últimas notícias
     st.subheader("📰 Últimas Notícias")
     for i, noticia in enumerate(noticias[:10], 1):
         st.markdown(f"**{i:02d}.** {noticia}")
