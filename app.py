@@ -1,8 +1,8 @@
 import streamlit as st
 from datetime import datetime
 import random
-from signalizador import buscar_noticias, analisar_sentimentos, classificar_risco
 import numpy as np
+from signalizador import buscar_noticias, analisar_sentimentos, classificar_risco
 
 st.set_page_config(page_title="Sinalizador BTC", layout="centered")
 st.title("🚦 Sinalizador de Risco - Bitcoin")
@@ -28,4 +28,3 @@ if api_key:
         st.markdown(f"**{i:02d}.** {noticia}")
 else:
     st.info("Para começar, insira sua chave da API do CryptoPanic.")
-
