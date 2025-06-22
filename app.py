@@ -18,7 +18,7 @@ st.caption(f"Atualizado em: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
 # Exibir imagem do semáforo
 image = Image.open("images/btc_semaforo.jpeg")
-st.image(image, caption="Sinalizador BTC", use_column_width=True)
+st.image(image, caption="Sinalizador BTC", use_container_width=True)
 
 # Campo para inserir a API Key
 api_key = st.text_input("🔑 Insira sua API Key do CryptoPanic:", type="password")
