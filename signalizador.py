@@ -1,4 +1,11 @@
 import requests
+from transformers import pipeline, BertTokenizer, BertForSequenceClassification
+import numpy as np
+
+# Carregar modelo BERT
+tokenizer = BertTokenizer.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
+model = BertForSequenceClassification.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
+sentiment_pipeline = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
 
 def buscar_noticias(api_key, limite=20):
     url = 'https://cryptopanic.com/api/v1/posts/'
@@ -17,20 +24,12 @@ def buscar_noticias(api_key, limite=20):
         print("Erro ao buscar notícias:", resposta.status_code)
         return []
 
-from transformers import pipeline, BertTokenizer, BertForSequenceClassification
-
-# Carregar modelo BERT
-tokenizer = BertTokenizer.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
-model = BertForSequenceClassification.from_pretrained('nlptown/bert-base-multilingual-uncased-sentiment')
-sentiment_pipeline = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
-
 def analisar_sentimentos(noticias):
     sentimentos = []
     for noticia in noticias:
         resultado = sentiment_pipeline(noticia)[0]
         score = resultado['score']
         label = resultado['label']
-        # Converter estrelas para sentimento numérico
         if label in ['1 star', '2 stars']:
             sentimentos.append(-score)
         elif label in ['4 stars', '5 stars']:
@@ -38,7 +37,6 @@ def analisar_sentimentos(noticias):
         else:
             sentimentos.append(0)
     return sentimentos
-import numpy as np
 
 def classificar_risco(sentimentos, volatilidade_estimada, volume_noticias):
     if volume_noticias == 0:
@@ -52,3 +50,4 @@ def classificar_risco(sentimentos, volatilidade_estimada, volume_noticias):
         return "🟡 Cuidado - Mercado instável", "🟡"
     else:
         return "🟢 Mercado calmo - Bom para operar", "🟢"
+
