@@ -50,4 +50,25 @@ def classificar_risco(sentimentos, volatilidade_estimada, volume_noticias):
         return "🟡 Cuidado - Mercado instável", "🟡"
     else:
         return "🟢 Mercado calmo - Bom para operar", "🟢"
+import pandas as pd
+
+def obter_volatilidade_real():
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+    params = {
+        "vs_currency": "usd",
+        "days": "30",
+        "interval": "daily"
+    }
+    r = requests.get(url, params=params)
+    data = r.json()
+
+    if 'prices' not in data:
+        return 0.0  # fallback
+
+    df = pd.DataFrame(data['prices'], columns=['timestamp', 'price'])
+    df['price'] = df['price'].astype(float)
+    df['retorno'] = df['price'].pct_change()
+    volatilidade = df['retorno'].std()
+
+    return float(volatilidade) if not pd.isna(volatilidade) else 0.0
 
