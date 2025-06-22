@@ -29,11 +29,6 @@ if api_key:
         volume = len(sentimentos)
         mensagem, emoji = classificar_risco(sentimentos, volatilidade_real, volume)
 
-    # Mostrar métricas
-    st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
-    st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
-    st.metric("Volume de Notícias", volume)
-
     # Escolher imagem do semáforo com base no emoji
     if "🔴" in emoji:
         imagem_risco = "images/semaforo_vermelho.jpeg"
@@ -44,9 +39,14 @@ if api_key:
     else:
         imagem_risco = "images/semaforo_verde.jpeg"  # fallback
 
-    # Exibir imagem do semáforo com legenda neutra
+    # Exibir imagem do semáforo logo após a chave da API
     image = Image.open(imagem_risco)
     st.image(image, caption="Status de Risco", use_container_width=True)
+
+    # Mostrar métricas abaixo do semáforo
+    st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
+    st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
+    st.metric("Volume de Notícias", volume)
 
     # Mostrar as últimas notícias
     st.subheader("📰 Últimas Notícias")
@@ -54,4 +54,5 @@ if api_key:
         st.markdown(f"**{i:02d}.** {noticia}")
 else:
     st.info("Para começar, insira sua chave da API do CryptoPanic.")
+
 
