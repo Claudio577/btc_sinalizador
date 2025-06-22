@@ -21,7 +21,7 @@ if api_key:
 
     st.markdown(f"## {emoji} {mensagem}")
     st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
-    st.metric("Volatilidade Estimada", f"{volatilidade_fake:.2%}")
+    st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
     st.metric("Volume de Notícias", volume)
 
     st.subheader("📰 Últimas Notícias")
