@@ -14,7 +14,8 @@ if api_key:
     with st.spinner("🔍 Coletando e analisando..."):
         noticias = buscar_noticias(api_key)
         sentimentos = analisar_sentimentos(noticias)
-        volatilidade_fake = random.uniform(0.01, 0.07)
+        from signalizador import obter_volatilidade_real
+        volatilidade_real = obter_volatilidade_real()
         volume = len(sentimentos)
         mensagem, emoji = classificar_risco(sentimentos, volatilidade_fake, volume)
 
