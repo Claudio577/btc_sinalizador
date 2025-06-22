@@ -17,7 +17,7 @@ if api_key:
         from signalizador import obter_volatilidade_real
         volatilidade_real = obter_volatilidade_real()
         volume = len(sentimentos)
-        mensagem, emoji = classificar_risco(sentimentos, volatilidade_fake, volume)
+        mensagem, emoji = classificar_risco(sentimentos, volatilidade_real, volume)
 
     st.markdown(f"## {emoji} {mensagem}")
     st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
