@@ -38,3 +38,17 @@ def analisar_sentimentos(noticias):
         else:
             sentimentos.append(0)
     return sentimentos
+import numpy as np
+
+def classificar_risco(sentimentos, volatilidade_estimada, volume_noticias):
+    if volume_noticias == 0:
+        return "Sem dados suficientes", "⚪"
+
+    sentimento_medio = np.mean(sentimentos)
+
+    if abs(sentimento_medio) > 0.6 and volume_noticias > 20:
+        return "🔴 Alta Volatilidade - Evite operar", "🔴"
+    elif 0.3 < abs(sentimento_medio) <= 0.6 or volume_noticias > 10:
+        return "🟡 Cuidado - Mercado instável", "🟡"
+    else:
+        return "🟢 Mercado calmo - Bom para operar", "🟢"
